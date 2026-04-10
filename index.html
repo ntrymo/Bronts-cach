@@ -1,319 +1,489 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> LAKHAL STORتجات </title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bronts Cash</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f4f6f8;
+direction:rtl;
+padding-bottom:90px;
+}
+
+/* شاشة البداية */
+
+.loader{
+position:fixed;
+width:100%;
+height:100%;
+background:white;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:999;
+}
+
+.logo{
+width:120px;
+margin-bottom:20px;
+}
+
+.spinner{
+width:50px;
+height:50px;
+border:5px solid #eee;
+border-top:5px solid #00a884;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg)}
+}
+
+/* header */
+
+.header{
+padding:20px;
+font-size:22px;
+font-weight:bold;
+}
+
+/* card */
+
+.card{
+background:linear-gradient(135deg,#00a884,#00c896);
+margin:15px;
+padding:25px;
+border-radius:25px;
+color:white;
+}
+
+.balance{
+font-size:32px;
+margin:10px 0;
+}
+
+.buttons{
+display:flex;
+gap:10px;
+}
+
+.btn{
+flex:1;
+padding:15px;
+border:none;
+border-radius:20px;
+background:white;
+color:#00a884;
+font-weight:bold;
+}
+
+/* white */
+
+.white{
+background:white;
+margin:15px;
+padding:20px;
+border-radius:20px;
+}
+
+.transaction{
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid #eee;
+}
+
+.up{
+color:#00a884;
+}
+
+.down{
+color:red;
+}
+
+/* nav */
+
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+background:white;
+padding:15px;
+display:flex;
+justify-content:space-around;
+box-shadow:0 -2px 10px rgba(0,0,0,.1);
+}
+
+.nav button{
+background:none;
+border:none;
+font-size:24px;
+}
+
+/* popup */
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,.4);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.popup-box{
+background:white;
+padding:20px;
+border-radius:20px;
+width:85%;
+}
+
+.popup-box input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.popup-box button{
+margin-top:10px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#00a884;
+color:white;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<!-- Splash Screen Animation -->
-<div id="splashScreen" class="splash-screen">
-    <div class="splash-content">
-        <div class="splash-logo">
-            <span class="logo-text">🛍️</span>
-        </div>
-        <h1 class="splash-title">LAKHAL STOR</h1>
-        <p class="splash-subtitle">متجرك الرقمي الأول</p>
-        <div class="splash-loader">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </div>
+<!-- Splash -->
+
+<div class="loader" id="loader">
+<img src="smok.png" class="logo">
+<div class="spinner"></div>
+<h3>Bronts Cash</h3>
 </div>
 
-<header class="header">
-    <div class="container">
-        <div class="logo">
-            <h1>LAKHAL STOR</h1>
-        </div>
-        <nav class="nav">
-            <a href="#products" class="nav-link">المنتجات</a>
-            <a href="events.html" class="nav-link">الأحداث</a>
-            <a href="news.html" class="nav-link">أخبارنا</a>
-            <a href="top-contributors.html" class="nav-link">المميزين</a>
-            <a href="#contact" class="nav-link">تواصل معنا</a>
-        </nav>
-        <div class="header-actions">
-            <button class="cart-header-btn" id="cartHeaderBtn" title="السلة">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span class="cart-count" id="cartCount">0</span>
-            </button>
-        </div>
-    </div>
-</header>
+<div id="app" style="display:none">
 
-<!-- Live Purchase Notifications -->
-<div class="live-notifications-container">
-    <div id="liveNotifications" class="live-notifications"></div>
+<div class="header">
+Bronts Cash
 </div>
 
-<section class="hero">
-    <div class="container">
-        <h2>مرحباً بك في متجرنا الرقمي</h2>
-        <p>احصل على أفضل المنتجات </p>
-    </div>
-</section>
+<!-- home -->
 
-<section id="products" class="products">
-    <div class="container">
-        <h2 class="section-title">منتجاتنا</h2>
-        <div id="productsContainer" class="products-grid"></div>
-    </div>
-</section>
+<div id="home">
 
-<!-- Featured Product Banner -->
-<section class="featured-banner">
-    <div class="banner-container">
-        <div class="banner-content">
-            <div class="banner-text">
-                <h2 class="banner-title">🎮 Emergency Emden</h2>
-                <p class="banner-subtitle">حساب احترافي على Roblox</p>
-                <div class="banner-features">
-                    <div class="feature-item">
-                        <span class="feature-icon">👤</span>
-                        <span>Username: mohammed_amine95</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🗺️</span>
-                        <span>أكثر المابات: Emergency Emden</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">✨</span>
-                        <span>أكثر من 4 Gamepass حصرية</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-icon">🚀</span>
-                        <span>حزمة تعديل السيارات الكاملة</span>
-                    </div>
-                </div>
-                <div class="banner-stats">
-                    <div class="stat">
-                        <div class="stat-number">4+</div>
-                        <div class="stat-label">Gamepasses</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">⭐</div>
-                        <div class="stat-label">احترافي 100%</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">💎</div>
-                        <div class="stat-label">حصري</div>
-                    </div>
-                </div>
-                <button class="btn btn-primary banner-cta" onclick="scrollToProduct()">شراء الآن</button>
-            </div>
-            <div class="banner-visual">
-                <div class="banner-emoji">🎮</div>
-                <div class="floating-elements">
-                    <span class="float-item" style="animation-delay: 0s;">🚗</span>
-                    <span class="float-item" style="animation-delay: 0.5s;">✈️</span>
-                    <span class="float-item" style="animation-delay: 1s;">🚁</span>
-                    <span class="float-item" style="animation-delay: 1.5s;">⚙️</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="card">
 
-<section id="contact" class="contact">
-    <div class="container">
-        <h2 class="section-title">📞 تواصل معنا</h2>
+<div>الرصيد المتوفر</div>
 
-        <div class="contact-wrapper">
-            <div class="contact-form-wrapper">
-                <div class="form-header">
-                    <h3>✉️ أرسل لنا رسالة</h3>
-                    <p>سنرد على رسالتك في أسرع وقت</p>
-                </div>
-                <form id="contactForm" class="contact-form">
-                    <div class="form-group">
-                        <label for="name">الاسم الكامل *</label>
-                        <input type="text" id="name" placeholder="أدخل اسمك" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">البريد الإلكتروني *</label>
-                        <input type="email" id="email" placeholder="بريدك الإلكتروني" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">الموضوع *</label>
-                        <input type="text" id="subject" placeholder="موضوع الرسالة" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">الرسالة *</label>
-                        <textarea id="message" placeholder="اكتب رسالتك هنا" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block submit-btn">
-                        <span class="btn-text">إرسال الرسالة</span>
-                        <span class="btn-icon">✉️</span>
-                    </button>
-                </form>
-                <div id="statusMessage" class="status-message"></div>
-            </div>
-
-            <div class="contact-info">
-                <div class="info-header">
-                    <h3>📍 معلومات التواصل</h3>
-                    <p>اختر الطريقة المفضلة للتواصل معنا</p>
-                </div>
-                
-                <div class="contact-cards">
-                    <div class="contact-card email-card">
-                        <div class="card-icon">📧</div>
-                        <h4>البريد الإلكتروني</h4>
-                        <p>lakhalstor@gmail.com</p>
-                        <a href="mailto:lakhalstor@gmail.com" class="card-btn">أرسل بريد</a>
-                    </div>
-
-                    <div class="contact-card phone-card">
-                        <div class="card-icon">📱</div>
-                        <h4>الهاتف</h4>
-                        <p>+212 704 973 576</p>
-                        <a href="tel:+212704973576" class="card-btn">اتصل بنا</a>
-                    </div>
-
-                    <div class="contact-card whatsapp-card">
-                        <div class="card-icon">💚</div>
-                        <h4>واتساب</h4>
-                        <p>رسائل فورية وسريعة</p>
-                        <a href="https://wa.me/964704973576" target="_blank" class="card-btn">افتح واتساب</a>
-                    </div>
-                </div>
-
-                <div class="contact-info-box">
-                    <div class="info-item">
-                        <span class="info-icon">⏰</span>
-                        <div>
-                            <strong>ساعات العمل</strong>
-                            <p>متاح 24/7</p>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-icon">⚡</span>
-                        <div>
-                            <strong>وقت الرد</strong>
-                            <p>أقل من ساعة</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<footer class="footer">
-    <div class="container">
-        <p>&copy; جميع  </p>
-    </div>
-</footer>
-
-<!-- Floating Action Buttons -->
-<div class="floating-action-menu">
-    <button class="fab-main" id="fabMain" title="قائمة المساعدة">
-        <span class="fab-icon">💬</span>
-    </button>
-    <div class="fab-menu">
-        <a href="https://wa.me/964704973576" target="_blank" class="fab-item" title="تواصل عبر واتساب">
-            <span class="fab-icon-small">💚</span>
-            <span class="fab-label">واتساب</span>
-        </a>
-        <a href="mailto:lakhalstor@gmail.com" class="fab-item" title="أرسل بريد إلكتروني">
-            <span class="fab-icon-small">📧</span>
-            <span class="fab-label">بريد</span>
-        </a>
-        <a href="#contact" class="fab-item" title="اذهب إلى التواصل">
-            <span class="fab-icon-small">📞</span>
-            <span class="fab-label">اتصل</span>
-        </a>
-        <button class="fab-item" onclick="scrollToTop()" title="اذهب للأعلى">
-            <span class="fab-icon-small">⬆️</span>
-            <span class="fab-label">أعلى</span>
-        </button>
-    </div>
+<div id="balance" class="balance">
+0 MAD
 </div>
 
-<!-- Cart Modal -->
-<div class="cart-modal" id="cartModal">
-    <div class="cart-modal-content">
-        <div class="cart-modal-header">
-            <h2>🛒 سلة التسوق</h2>
-            <button class="cart-modal-close" onclick="closeCartModal()">✕</button>
-        </div>
-        <div class="cart-modal-body">
-            <div id="cartItemsContainer" class="cart-items-container">
-                <!-- Cart items will be displayed here -->
-            </div>
-        </div>
-        <div class="cart-modal-footer">
-            <div class="cart-summary">
-                <div class="summary-row">
-                    <span>عدد المنتجات:</span>
-                    <span id="cartItemCount" class="cart-count-display">0</span>
-                </div>
-                <div class="summary-row total">
-                    <span>الإجمالي:</span>
-                    <span id="cartTotal" class="cart-total-display">$0</span>
-                </div>
-            </div>
-            <div class="cart-actions">
-                <button class="btn btn-secondary" onclick="closeCartModal()">إغلاق</button>
-                <button class="btn btn-primary" onclick="proceedToCheckout()">إتمام الشراء</button>
-            </div>
-        </div>
-    </div>
+<div class="buttons">
+
+<button class="btn" onclick="openPopup('add')">
++ إضافة
+</button>
+
+<button class="btn" onclick="openPopup('remove')">
+- خصم
+</button>
+
 </div>
 
-<!-- Checkout Modal -->
-<div id="checkoutModal" class="cart-modal">
-    <div class="cart-modal-content">
-        <div class="cart-modal-header">
-            <h2>💳 إتمام الشراء</h2>
-            <button class="cart-modal-close" onclick="closeCheckoutModal()">✕</button>
-        </div>
-        <div class="cart-modal-body" style="overflow-y: auto;">
-            <form id="checkoutForm" class="purchase-form">
-                <div style="background: var(--primary-light); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                    <h4 style="color: var(--dark-color); margin-bottom: 12px;">📦 ملخص الطلب:</h4>
-                    <div id="checkoutSummary"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="checkoutName">الاسم الكامل *</label>
-                    <input type="text" id="checkoutName" placeholder="أدخل اسمك" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="checkoutEmail">البريد الإلكتروني *</label>
-                    <input type="email" id="checkoutEmail" placeholder="بريدك الإلكتروني" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="checkoutPhone">رقم الهاتف *</label>
-                    <input type="tel" id="checkoutPhone" placeholder="رقم هاتفك" required>
-                </div>
-
-                <div class="form-group" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
-                    <label>💳 طريقة الدفع:</label>
-                    <div style="background: rgba(94, 114, 228, 0.1); padding: 12px; border-radius: 8px; margin-top: 8px; color: var(--dark-color);">
-                        🔐 MT CASH - تحويل آمن وسريع
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 12px; margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal()" style="flex: 1;">إلغاء</button>
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">تأكيد الطلب ✓</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </div>
 
-<script src="script.js"></script>
+<div class="white">
+
+<h3>المعاملات</h3>
+
+<div id="list"></div>
+
+</div>
+
+</div>
+
+<!-- goal -->
+
+<div id="goal" style="display:none">
+
+<div class="white">
+
+<h3>🎯 الهدف</h3>
+
+<div id="goalText">لا يوجد هدف</div>
+
+<h2 id="countdown"></h2>
+
+<button class="btn"
+onclick="openPopup('goal')">
+إضافة هدف
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- popup -->
+
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<input id="amount"
+placeholder="المبلغ">
+
+<input id="days"
+placeholder="الأيام">
+
+<input id="hours"
+placeholder="الساعات">
+
+<input id="minutes"
+placeholder="الدقائق">
+
+<button onclick="confirm()">حفظ</button>
+
+<button onclick="closePopup()">إلغاء</button>
+
+</div>
+
+</div>
+
+<!-- nav -->
+
+<div class="nav">
+
+<button onclick="showPage('home')">
+🏠
+</button>
+
+<button onclick="showPage('goal')">
+🎯
+</button>
+
+<button onclick="showPage('home')">
+💰
+</button>
+
+</div>
+
+<script>
+
+let balanceValue=0
+let transactions=[]
+let goalAmount=0
+let goalTime=0
+let type=""
+
+/* loader */
+
+window.onload=()=>{
+
+setTimeout(()=>{
+
+loader.style.display="none"
+app.style.display="block"
+
+loadData()
+
+},1500)
+
+}
+
+/* save */
+
+function saveData(){
+
+localStorage.setItem("balance",balanceValue)
+localStorage.setItem("transactions",JSON.stringify(transactions))
+localStorage.setItem("goalAmount",goalAmount)
+localStorage.setItem("goalTime",goalTime)
+
+}
+
+/* load */
+
+function loadData(){
+
+balanceValue=parseInt(localStorage.getItem("balance"))||0
+transactions=JSON.parse(localStorage.getItem("transactions"))||[]
+goalAmount=parseInt(localStorage.getItem("goalAmount"))||0
+goalTime=parseInt(localStorage.getItem("goalTime"))||0
+
+update()
+
+transactions.forEach(t=>addTransaction(t.val,t.plus))
+
+if(goalAmount){
+goalText.innerText="الهدف "+goalAmount+" MAD"
+startCountdown()
+}
+
+}
+
+/* popup */
+
+function openPopup(t){
+
+type=t
+
+amount.value=""
+days.value=""
+hours.value=""
+minutes.value=""
+
+popup.style.display="flex"
+
+if(t!="goal"){
+days.style.display="none"
+hours.style.display="none"
+minutes.style.display="none"
+}else{
+days.style.display="block"
+hours.style.display="block"
+minutes.style.display="block"
+}
+
+}
+
+function closePopup(){
+popup.style.display="none"
+}
+
+/* confirm */
+
+function confirm(){
+
+let value=parseInt(amount.value)
+
+if(!value)return
+
+if(type=="add"){
+balanceValue+=value
+addTransaction(value,true)
+}
+
+if(type=="remove"){
+balanceValue-=value
+addTransaction(value,false)
+}
+
+if(type=="goal"){
+
+let d=parseInt(days.value)||0
+let h=parseInt(hours.value)||0
+let m=parseInt(minutes.value)||0
+
+goalAmount=value
+
+goalTime=new Date().getTime()
++(d*24*60*60*1000)
++(h*60*60*1000)
++(m*60*1000)
+
+goalText.innerText="الهدف "+goalAmount+" MAD"
+
+startCountdown()
+
+}
+
+update()
+saveData()
+
+closePopup()
+
+}
+
+/* update */
+
+function update(){
+document.getElementById("balance").innerText=
+balanceValue+" MAD"
+}
+
+/* transaction */
+
+function addTransaction(val,plus){
+
+transactions.push({val,plus})
+
+let div=document.createElement("div")
+div.className="transaction"
+
+if(plus){
+div.innerHTML="<span>"+val+" MAD</span><span class='up'>↑</span>"
+}else{
+div.innerHTML="<span>"+val+" MAD</span><span class='down'>↓</span>"
+}
+
+list.prepend(div)
+
+}
+
+/* countdown */
+
+function startCountdown(){
+
+setInterval(()=>{
+
+let now=new Date().getTime()
+let distance=goalTime-now
+
+let days=Math.floor(distance/(1000*60*60*24))
+let hours=Math.floor((distance%(1000*60*60*24))/(1000*60*60))
+let minutes=Math.floor((distance%(1000*60*60))/(1000*60))
+let seconds=Math.floor((distance%(1000*60))/1000)
+
+countdown.innerText=
+days+" يوم "+
+hours+" ساعة "+
+minutes+" دقيقة "+
+seconds+" ثانية"
+
+if(balanceValue>=goalAmount){
+alert("🎉 مبروك وصلت للهدف")
+}
+
+},1000)
+
+}
+
+/* pages */
+
+function showPage(p){
+
+home.style.display="none"
+goal.style.display="none"
+
+document.getElementById(p).style.display="block"
+
+}
+
+</script>
+
 </body>
 </html>
