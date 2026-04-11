@@ -6,40 +6,69 @@
 
 <title>Bronts Cash</title>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 
 body{
 margin:0;
-font-family:Arial;
-background:#f4f6f8;
+font-family:'Segoe UI',Tahoma;
+background:linear-gradient(180deg,#f7f9fc,#eef2f7);
 direction:rtl;
-padding-bottom:90px;
+padding-bottom:100px;
 }
 
-/* شاشة البداية */
+/* Toast */
+
+.toast{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+padding:15px 25px;
+border-radius:15px;
+font-weight:bold;
+display:none;
+z-index:9999;
+color:white;
+}
+
+.success{background:#00a884}
+.fail{background:#e53935}
+
+/* Loader */
 
 .loader{
 position:fixed;
 width:100%;
 height:100%;
-background:white;
+background:linear-gradient(135deg,#00a884,#00d09c);
 display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
+color:white;
 z-index:999;
 }
 
-.logo{
-width:120px;
-margin-bottom:20px;
+.internet-loader{
+position:fixed;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#00a884,#00d09c);
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+color:white;
+z-index:9999;
 }
 
 .spinner{
 width:50px;
 height:50px;
-border:5px solid #eee;
-border-top:5px solid #00a884;
+border:5px solid rgba(255,255,255,.3);
+border-top:5px solid white;
 border-radius:50%;
 animation:spin 1s linear infinite;
 }
@@ -48,88 +77,80 @@ animation:spin 1s linear infinite;
 100%{transform:rotate(360deg)}
 }
 
-/* header */
-
 .header{
-padding:20px;
-font-size:22px;
+padding:25px 20px 10px;
+font-size:24px;
 font-weight:bold;
 }
 
-/* card */
-
 .card{
-background:linear-gradient(135deg,#00a884,#00c896);
+background:linear-gradient(135deg,#00a884,#00d09c);
 margin:15px;
-padding:25px;
-border-radius:25px;
+padding:30px;
+border-radius:30px;
 color:white;
 }
 
 .balance{
-font-size:32px;
-margin:10px 0;
+font-size:36px;
+margin:15px 0;
+font-weight:bold;
 }
 
 .buttons{
 display:flex;
-gap:10px;
+gap:12px;
 }
 
 .btn{
 flex:1;
-padding:15px;
+padding:16px;
 border:none;
-border-radius:20px;
+border-radius:18px;
 background:white;
 color:#00a884;
 font-weight:bold;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
 }
-
-/* white */
 
 .white{
 background:white;
 margin:15px;
-padding:20px;
-border-radius:20px;
+padding:22px;
+border-radius:25px;
 }
 
 .transaction{
 display:flex;
 justify-content:space-between;
-padding:12px 0;
+padding:14px 0;
 border-bottom:1px solid #eee;
 }
 
-.up{
-color:#00a884;
-}
-
-.down{
-color:red;
-}
-
-/* nav */
+.up{color:#00a884}
+.down{color:red}
 
 .nav{
 position:fixed;
-bottom:0;
-width:100%;
+bottom:15px;
+left:15px;
+right:15px;
 background:white;
-padding:15px;
+padding:12px;
 display:flex;
 justify-content:space-around;
-box-shadow:0 -2px 10px rgba(0,0,0,.1);
+border-radius:25px;
+box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
 
 .nav button{
 background:none;
 border:none;
-font-size:24px;
+font-size:22px;
 }
-
-/* popup */
 
 .popup{
 position:fixed;
@@ -145,150 +166,138 @@ align-items:center;
 
 .popup-box{
 background:white;
-padding:20px;
-border-radius:20px;
+padding:25px;
+border-radius:25px;
 width:85%;
 }
 
 .popup-box input{
 width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-border:1px solid #ddd;
+padding:14px;
+margin-top:12px;
+border-radius:12px;
+border:1px solid #eee;
 }
 
 .popup-box button{
-margin-top:10px;
+margin-top:12px;
 width:100%;
-padding:12px;
+padding:14px;
 border:none;
-border-radius:10px;
+border-radius:14px;
 background:#00a884;
 color:white;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<!-- Splash -->
+<div id="toast" class="toast"></div>
 
 <div class="loader" id="loader">
-<img src="smok.png" class="logo">
+<i class="fa-solid fa-wallet" style="font-size:40px"></i>
 <div class="spinner"></div>
 <h3>Bronts Cash</h3>
+</div>
+
+<div class="internet-loader" id="internetLoader">
+<i class="fa-solid fa-wifi" style="font-size:40px"></i>
+<div class="spinner"></div>
+<h3>انتظار الاتصال بالانترنت...</h3>
 </div>
 
 <div id="app" style="display:none">
 
 <div class="header">
+<i class="fa-solid fa-chart-line"></i>
 Bronts Cash
 </div>
-
-<!-- home -->
 
 <div id="home">
 
 <div class="card">
-
-<div>الرصيد المتوفر</div>
-
-<div id="balance" class="balance">
-0 MAD
+<div>
+<i class="fa-solid fa-wallet"></i>
+الرصيد المتوفر
 </div>
 
-<div class="buttons">
+<div id="balance" class="balance">0 MAD</div>
 
+<div class="buttons">
 <button class="btn" onclick="openPopup('add')">
-+ إضافة
+<i class="fa-solid fa-plus"></i>
+إضافة
 </button>
 
 <button class="btn" onclick="openPopup('remove')">
-- خصم
+<i class="fa-solid fa-minus"></i>
+خصم
 </button>
-
 </div>
 
 </div>
 
 <div class="white">
-
-<h3>المعاملات</h3>
+<h3>
+<i class="fa-solid fa-clock"></i>
+المعاملات
+</h3>
 
 <div id="list"></div>
 
 </div>
-
 </div>
-
-<!-- goal -->
 
 <div id="goal" style="display:none">
 
 <div class="white">
-
-<h3>🎯 الهدف</h3>
+<h3>
+<i class="fa-solid fa-bullseye"></i>
+الهدف
+</h3>
 
 <div id="goalText">لا يوجد هدف</div>
-
 <h2 id="countdown"></h2>
+<div id="endTime"></div>
 
-<button class="btn"
-onclick="openPopup('goal')">
+<button class="btn" onclick="openPopup('goal')">
+<i class="fa-solid fa-flag"></i>
 إضافة هدف
 </button>
 
 </div>
-
 </div>
 
 </div>
-
-<!-- popup -->
 
 <div class="popup" id="popup">
-
 <div class="popup-box">
 
-<input id="amount"
-placeholder="المبلغ">
-
-<input id="days"
-placeholder="الأيام">
-
-<input id="hours"
-placeholder="الساعات">
-
-<input id="minutes"
-placeholder="الدقائق">
+<input id="amount" placeholder="المبلغ">
+<input id="days" placeholder="الأيام">
+<input id="hours" placeholder="الساعات">
+<input id="minutes" placeholder="الدقائق">
 
 <button onclick="confirm()">حفظ</button>
-
 <button onclick="closePopup()">إلغاء</button>
 
 </div>
-
 </div>
 
-<!-- nav -->
-
 <div class="nav">
-
 <button onclick="showPage('home')">
-🏠
+<i class="fa-solid fa-house"></i>
 </button>
 
 <button onclick="showPage('goal')">
-🎯
+<i class="fa-solid fa-bullseye"></i>
 </button>
 
 <button onclick="showPage('home')">
-💰
+<i class="fa-solid fa-wallet"></i>
 </button>
-
 </div>
 
 <script>
@@ -298,34 +307,61 @@ let transactions=[]
 let goalAmount=0
 let goalTime=0
 let type=""
-
-/* loader */
+let countdownInterval
 
 window.onload=()=>{
-
 setTimeout(()=>{
-
 loader.style.display="none"
-app.style.display="block"
-
+checkInternet()
 loadData()
-
 },1500)
+}
+
+/* Internet */
+
+function checkInternet(){
+
+if(!navigator.onLine){
+internetLoader.style.display="flex"
+app.style.display="none"
+}else{
+internetLoader.style.display="none"
+app.style.display="block"
+}
 
 }
 
-/* save */
+window.addEventListener("offline",()=>{
+internetLoader.style.display="flex"
+app.style.display="none"
+})
+
+window.addEventListener("online",()=>{
+internetLoader.style.display="none"
+app.style.display="block"
+showToast("تم الاتصال بالانترنت","success")
+})
+
+/* Toast */
+
+function showToast(text,type="success"){
+toast.innerText=text
+toast.className="toast "+type
+toast.style.display="block"
+
+setTimeout(()=>{
+toast.style.display="none"
+},3000)
+}
+
+/* Storage */
 
 function saveData(){
-
 localStorage.setItem("balance",balanceValue)
 localStorage.setItem("transactions",JSON.stringify(transactions))
 localStorage.setItem("goalAmount",goalAmount)
 localStorage.setItem("goalTime",goalTime)
-
 }
-
-/* load */
 
 function loadData(){
 
@@ -339,18 +375,23 @@ update()
 transactions.forEach(t=>addTransaction(t.val,t.plus))
 
 if(goalAmount){
+
 goalText.innerText="الهدف "+goalAmount+" MAD"
+
+let endDate=new Date(goalTime)
+endTime.innerText="ينتهي في: "+endDate.toLocaleString()
+
 startCountdown()
-}
 
 }
 
-/* popup */
+}
+
+/* Popup */
 
 function openPopup(t){
 
 type=t
-
 amount.value=""
 days.value=""
 hours.value=""
@@ -374,12 +415,9 @@ function closePopup(){
 popup.style.display="none"
 }
 
-/* confirm */
-
 function confirm(){
 
 let value=parseInt(amount.value)
-
 if(!value)return
 
 if(type=="add"){
@@ -407,25 +445,22 @@ goalTime=new Date().getTime()
 
 goalText.innerText="الهدف "+goalAmount+" MAD"
 
+let endDate=new Date(goalTime)
+endTime.innerText="ينتهي في: "+endDate.toLocaleString()
+
 startCountdown()
 
 }
 
 update()
 saveData()
-
 closePopup()
 
 }
 
-/* update */
-
 function update(){
-document.getElementById("balance").innerText=
-balanceValue+" MAD"
+balance.innerText=balanceValue+" MAD"
 }
-
-/* transaction */
 
 function addTransaction(val,plus){
 
@@ -435,20 +470,20 @@ let div=document.createElement("div")
 div.className="transaction"
 
 if(plus){
-div.innerHTML="<span>"+val+" MAD</span><span class='up'>↑</span>"
+div.innerHTML="<span>"+val+" MAD</span><span class='up'><i class='fa-solid fa-arrow-up'></i></span>"
 }else{
-div.innerHTML="<span>"+val+" MAD</span><span class='down'>↓</span>"
+div.innerHTML="<span>"+val+" MAD</span><span class='down'><i class='fa-solid fa-arrow-down'></i></span>"
 }
 
 list.prepend(div)
 
 }
 
-/* countdown */
-
 function startCountdown(){
 
-setInterval(()=>{
+clearInterval(countdownInterval)
+
+countdownInterval=setInterval(()=>{
 
 let now=new Date().getTime()
 let distance=goalTime-now
@@ -464,15 +499,35 @@ hours+" ساعة "+
 minutes+" دقيقة "+
 seconds+" ثانية"
 
+if(distance<=0){
+
+clearInterval(countdownInterval)
+
 if(balanceValue>=goalAmount){
-alert("🎉 مبروك وصلت للهدف")
+alert("لقد نجحت في الهدف")
+showToast("تمت المهمة","success")
+}else{
+alert("انتهى وقت الهدف")
+showToast("انتهت المهمة","fail")
+}
+
+goalAmount=0
+goalTime=0
+
+goalText.innerText="لا يوجد هدف"
+countdown.innerText=""
+endTime.innerText=""
+
+localStorage.removeItem("goalAmount")
+localStorage.removeItem("goalTime")
+
+return
+
 }
 
 },1000)
 
 }
-
-/* pages */
 
 function showPage(p){
 
